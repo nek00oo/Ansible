@@ -33,16 +33,18 @@
 
 ---
 
+*domain переопределён для vm1 и vm2 на соответствующие
+
 
 ```bash
+#input paraphrase "itmorsa"
+
 # install collection
 ansible-galaxy collection install community.docker
 
+#set config
+export ANSIBLE_CONFIG=/projects/ansible/ansible.cfg
 
-# run playbook (http)
-ansible-playbook -i tests/inventory tests/test.yml -e "use_https=false"
-
-
-# run playbook (https on custom host port 10320)
-ansible-playbook -i tests/inventory tests/test.yml -e "use_https=true nginx_host_https_port=10320 domain=group-3-st-10-2.itmo.devops-teta.ru"
+# start playbook
+ansible-playbook -i hosts.yaml playbook.yaml
 ```
