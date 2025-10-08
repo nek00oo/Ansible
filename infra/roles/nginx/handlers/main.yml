@@ -1,0 +1,5 @@
+- name: restart nginx container
+  community.docker.docker_container:
+    name: "{{ nginx_container_name }}"
+    state: restarted
+  when: false # handler kept for reference: main tasks recreate container directly

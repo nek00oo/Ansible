@@ -1,0 +1,23 @@
+# defaults for nginx role
+domain: "localhost"
+nginx_image: "nginx"
+nginx_image_tag: "stable"
+nginx_container_name: "nginx_web"
+nginx_host_http_port: 80
+nginx_host_https_port: 443
+nginx_container_http_port: 80
+nginx_container_https_port: 443
+nginx_conf_template: "templates/nginx.conf.j2"
+nginx_site_template: "templates/site.conf.j2"
+nginx_static_host_path: "{{ playbook_dir | default('/projects/ansible') }}/site_content"
+nginx_static_container_path: "/usr/share/nginx/html"
+use_https: true
+ssl_cert_path: "/etc/nginx/ssl/nginx.crt"
+ssl_key_path: "/etc/nginx/ssl/nginx.key"
+ssl_country: "RU"
+ssl_state: "SomeState"
+ssl_locality: "SomeCity"
+ssl_organization: "ITMO"
+ssl_common_name: "localhost"
+# If you want to map non-standard host port for https override host_https_port
+# Example for testing: -e "nginx_host_https_port=10320"

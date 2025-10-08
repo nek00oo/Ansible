@@ -1,0 +1,14 @@
+all:
+  vars:
+    ansible_user: student
+    ansible_ssh_private_key_file: "~/.ssh/student_id_rsa"
+    ansible_python_interpreter: /usr/bin/python3
+  hosts:
+    vm1:
+      ansible_host: 10.101.3.19
+      domain: group-3-st-10-1.itmo.devops-teta.ru
+      nginx_host_https_port: 10319
+    vm2:
+      ansible_host: 10.101.3.20
+      domain: group-3-st-10-2.itmo.devops-teta.ru
+      nginx_host_https_port: 10320

@@ -1,0 +1,50 @@
+- name: include docker installation tasks
+  import_tasks: docker.yml
+
+
+- name: create ssl directory (if needed)
+  file:
+    path: "{{ ssl_cert_path | dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  when: use_https | bool
+
+
+- name: prepare static content directory on host
+  file:
+    path: "{{ nginx_static_host_path }}"
+    state: directory
+    mode: '0755'
+
+
+- name: copy sample index.html if none exists
+  copy:
+    src: index.html
+    dest: "{{ nginx_static_host_path }}/index.html"
+    remote_src: no
+  when: not (ansible_local_nginx_index_exists is defined and ansible_local_nginx_index_exists)
+
+
+- name: check for existing cert
+  stat:
+    path: "{{ ssl_cert_path }}"
+  register: cert_stat
+  when: use_https | bool
+
+
+- name: generate self-signed certificate if missing
+  import_tasks: certs.yml
+  when: use_https | bool and not cert_stat.stat.exists
+
+
+- name: create nginx site config from template
+  template:
+    src: "{{ nginx_site_template }}"
+    dest: /tmp/site.conf
+    mode: '0644'
+
+
+- name: deploy nginx container (image + run)
+  import_tasks: docker_image_and_container.yml

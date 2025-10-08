@@ -1,0 +1,19 @@
+- name: Pull nginx image
+  community.docker.docker_image:
+    name: "{{ nginx_image }}"
+    tag: "{{ nginx_image_tag }}"
+    source: pull
+
+- name: Create and start nginx container
+  community.docker.docker_container:
+    name: "{{ nginx_container_name }}"
+    image: "{{ nginx_image }}:{{ nginx_image_tag }}"
+    state: started
+    recreate: true
+    restart_policy: unless-stopped
+    ports: "{{ [nginx_host_http_port ~ ':' ~ nginx_container_http_port] + ([nginx_host_https_port ~ ':' ~ nginx_container_https_port] if use_https | bool else []) }}"
+    volumes:
+      - "{{ nginx_static_host_path }}:{{ nginx_static_container_path }}:ro"
+      - "{{ ssl_cert_path }}:/etc/nginx/ssl/nginx.crt:ro"
+      - "{{ ssl_key_path }}:/etc/nginx/ssl/nginx.key:ro"
+      - "/tmp/site.conf:/etc/nginx/conf.d/default.conf:ro"
